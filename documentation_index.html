@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCAPDEV Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <h1 id="docTitle">CCAPDEV Documentation</h1>
+    <p id="descriptionHeader">Created by Hadriel H. Ramos</p>
+
+    <!-- HTML Section -->
+    <div class="section">
+    <h3>HTML</h3>
+    <div class="showSnippet" id="htmlSnippet"></div>
+    <ul>
+        <li>Basic Tags: 
+            <code data-key="div">&lt;div&gt;</code>, 
+            <code data-key="span">&lt;span&gt;</code>, 
+            <code data-key="p">&lt;p&gt;</code>, 
+            <code data-key="a">&lt;a&gt;</code>, 
+            <code data-key="img">&lt;img&gt;</code>, 
+            <code data-key="form">&lt;form&gt;</code>, 
+            <code data-key="input">&lt;input&gt;</code>
+        </li>
+        <li>Attributes: 
+            <code data-key="id">id</code>, 
+            <code data-key="class">class</code>, 
+            <code data-key="src">src</code>, 
+            <code data-key="alt">alt</code>, 
+            <code data-key="href">href</code>, 
+            <code data-key="value">value</code>, 
+            <code data-key="placeholder">placeholder</code>
+        </li>
+        <li>Semantic Tags
+            <ul>
+                <li><code data-key="header">&lt;header&gt;</code></li>
+                <li><code data-key="footer">&lt;footer&gt;</code></li>
+                <li><code data-key="section">&lt;section&gt;</code></li>
+                <li><code data-key="article">&lt;article&gt;</code></li>
+            </ul>
+        </li>
+    </ul>
+    </div>
+
+
+    <!-- CSS Section -->
+    <div class="section">
+    <h3>CSS</h3>
+    <div class="showSnippet" id="cssSnippet"></div>
+    <ul>
+        <li>Selectors: 
+            <code data-key="idSelector">#id</code>, 
+            <code data-key="classSelector">.class</code>, 
+            <code data-key="elementSelector">element</code>, 
+            <code data-key="elementClassSelector">element.class</code>, 
+            <code data-key="childSelector">element &gt; child</code>, 
+            <code data-key="siblingSelector">element + sibling</code>
+        </li>
+        <li>Box Model: 
+            <code data-key="margin">margin</code>, 
+            <code data-key="padding">padding</code>, 
+            <code data-key="border">border</code>, 
+            <code data-key="width">width</code>, 
+            <code data-key="height">height</code>
+        </li>
+        <li>Common Properties: 
+            <code data-key="backgroundColor">background-color</code>, 
+            <code data-key="color">color</code>, 
+            <code data-key="fontSize">font-size</code>, 
+            <code data-key="display">display</code>, 
+            <code data-key="position">position</code>, 
+            <code data-key="flex">flex</code>, 
+            <code data-key="grid">grid</code>
+        </li>
+        <li>Pseudo-classes/elements: 
+            <code data-key="hover">:hover</code>, 
+            <code data-key="firstChild">:first-child</code>, 
+            <code data-key="before">::before</code>, 
+            <code data-key="after">::after</code>
+        </li>
+    </ul>
+    </div>
+
+
+    <!-- jQuery Section -->
+    <div class="section">
+    <h3>jQuery</h3>
+    <div class="showSnippet" id="jQuerySnippet"></div>
+    <ul>
+        <li>Selectors: 
+            <code data-key="idSelectorJQ">$("#id")</code>, 
+            <code data-key="classSelectorJQ">$(".class")</code>, 
+            <code data-key="tagSelectorJQ">$("tag")</code>
+        </li>
+        <li>Events: 
+            <code data-key="clickEvent">.click()</code>, 
+            <code data-key="mouseenterEvent">.mouseenter()</code>, 
+            <code data-key="mouseleaveEvent">.mouseleave()</code>, 
+            <code data-key="keydownEvent">.keydown()</code>, 
+            <code data-key="keyupEvent">.keyup()</code>, 
+            <code data-key="keypressEvent">.keypress()</code>
+        </li>
+        <li>DOM Manipulation: 
+            <code data-key="htmlMethod">.html()</code>, 
+            <code data-key="textMethod">.text()</code>, 
+            <code data-key="valMethod">.val()</code>, 
+            <code data-key="appendMethod">.append()</code>, 
+            <code data-key="prependMethod">.prepend()</code>, 
+            <code data-key="cssMethod">.css()</code>
+        </li>
+        <li>Show/Hide: 
+            <code data-key="showMethod">.show()</code>, 
+            <code data-key="hideMethod">.hide()</code>, 
+            <code data-key="toggleMethod">.toggle()</code>
+        </li>
+    </ul>
+    </div>
+
+
+    <!-- Snippets -->
+    <h3>Useful Snippets</h3>
+    <ul>
+        <li>
+            Change text on click:
+            <pre>
+$("#btn").click(function() {
+    $(this).text("Clicked!");
+});
+            </pre>
+        </li>
+        <li>
+            Hover effect:
+            <pre>
+$("#box").mouseenter(function(){
+    $(this).css("background-color","green");
+}).mouseleave(function(){
+    $(this).css("background-color","blue");
+});
+            </pre>
+        </li>
+        <li>
+            Input events:
+            <pre>
+$("#inputBox").keydown(function(e){ console.log(e.key); });
+$("#inputBox").keyup(function(e){ console.log(e.key); });
+            </pre>
+        </li>
+        <li>
+            Append element dynamically:
+            <pre>
+$("#container").append("&lt;p&gt;New paragraph&lt;/p&gt;");
+            </pre>
+        </li>
+    </ul>
+
+    <script 
+            src="https://code.jquery.com/jquery-3.7.1.js" 
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" 
+            crossorigin="anonymous">
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
