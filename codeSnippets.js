@@ -1,4 +1,4 @@
-const codeSnippets = {
+window.codeSnippets = {
     // HTML
     div: `<div id="example">Hello World</div>`,
     span: `<span class="highlight">Text</span>`,
@@ -6,7 +6,69 @@ const codeSnippets = {
     a: `<a href="https://example.com">Link</a>`,
     img: `<img src="image.jpg" alt="Example Image">`,
     form: `<form id="myForm"><input type="text" placeholder="Name"><button>Submit</button></form>`,
-    input: `<input type="text" id="username" placeholder="Enter username">`,
+    input: `
+    You can put the following:
+     
+    disabled | readonly | required | size="40" | maxlength="5" | pattern="REGEX-EXPRESSION" | autofocus | step="5" | autocomplete="off" |
+
+    <input type="text" placeholder="Enter text">
+    <input type="password" placeholder="Enter password">
+    <input type="email" placeholder="Enter email">
+    <input type="url" placeholder="https://example.com">
+    <input type="tel" placeholder="123-456-7890">
+    <input type="search" placeholder="Search...">
+    <input type="number" min="1" max="10" step="1">
+    <input type="range" min="0" max="100" step="10">
+    <input type="date">
+    <input type="datetime-local">
+    <input type="month">
+    <input type="week">
+    <input type="time">
+    <input type="file" multiple>
+    <input type="submit" value="Submit">
+    <input type="reset" value="Reset">
+    <input type="button" value="Click Me">
+    <input type="image" src="button.png" alt="Image Button">
+`,
+    radioButton: `
+    <form>
+        <p>Choose your gender:</p>
+        <input type="radio" id="male" name="gender" value="male">
+        <label for="male">Male</label><br>
+
+        <input type="radio" id="female" name="gender" value="female">
+        <label for="female">Female</label><br>
+
+        <input type="radio" id="other" name="gender" value="other">
+        <label for="other">Other</label>
+    </form>
+    `,
+    checkButton: `
+    <form>
+        <p>Select your hobbies:</p>
+        <input type="checkbox" id="reading" name="hobby" value="reading">
+        <label for="reading">Reading</label><br>
+
+        <input type="checkbox" id="sports" name="hobby" value="sports">
+        <label for="sports">Sports</label><br>
+
+        <input type="checkbox" id="music" name="hobby" value="music">
+        <label for="music">Music</label>
+    </form>
+    `,
+    dropDown: `
+    <form>
+        <p>Select your country:</p>
+        <select name="country" id="country">
+            <option value="ph">Philippines</option>
+            <option value="us">United States</option>
+            <option value="uk">United Kingdom</option>
+            <option value="jp">Japan</option>
+        </select>
+    </form>
+    `,
+
+
     header: `<header>Header content</header>`,
     footer: `<footer>Footer content</footer>`,
     section: `<section>Section content</section>`,
@@ -192,4 +254,4 @@ const codeSnippets = {
     `,
     };
 
-    export default codeSnippets;
+    // export default codeSnippets;
