@@ -265,6 +265,182 @@ window.codeSnippets = {
     toggleMethod: `
     $("#div").toggle();
     `,
+
+    // Mongoose MongoDB
+    mongoDbClient: `
+    import { MongoClient } from "mongodb";
+
+    // 1.) Establish the client database
+    const mongoURI = process.env.MONGODB_URI
+    const client = new  MongoClient(mongoURI);
+
+    // 2.) Connect to database
+    export function connectToMongo(callback) {
+        client.connect().then( (client) => {
+            return callback(); 
+        }).catch( err => {
+            callback(err);
+        })
+    }
+
+    // 3.) Getter for the database
+    export function getDb(dbName = process.env.DB_NAME) { // Defaults to DB_NAME if not provided
+        return client.db(dbName);
+    }
+
+    // This is for graceful exit handling
+    function signalHandler() {
+        console.log("Closing MongoDB connection...");
+        client.close();
+        process.exit();
+    }
+
+    process.on('SIGINT', signalHandler);
+    process.on('SIGTERM', signalHandler);
+    process.on('SIGQUIT', signalHandler);
+    `,
+
+    modelMongoose: `
+    import mongoose from "mongoose";
+
+    // 1. Define the schema (mongoose.Schema)
+    const flightSchema = new mongoose.Schema({
+        airline: { type: String, required: true },
+        flightNumber: { type: String, required: true, unique: true },
+        passengerCount: { type: Number, required: true, min: 0 },
+        createdAt: { type: Date, default: Date.now }
+    });
+
+    // 2. Create the model (table in SQL) (mongoose.model)
+    const Flight = mongoose.model("Flight", flightSchema);
+
+    export default Flight;
+    `,
+
+   reference: "MONGODB CRUD REFERENCE\n\nCREATE:\n  table.insertOne({ object });\n\nREAD:\n  table.findOne({ filter });\n  table.countDocuments({ filter });\n  table.aggregate([\n    { $match: { } },\n    { $group: { } }\n  ]).toArray();\n\nUPDATE:\n  table.updateOne(\n    { WHERE },\n    { $set: { ... } }\n  );\n  table.updateMany(\n    { active: false },\n    { $set: { status: 'inactive' } }\n  );\n  table.replaceOne(\n    { _id: new ObjectId('...') },\n    { name: 'Bob', email: 'bob@example.com', role: 'user' }\n  );\n  table.findOneAndUpdate(\n    { email: 'bob@example.com' },\n    { $set: { lastLogin: new Date() } },\n    { returnDocument: 'after' }\n  );\n\nDELETE:\n  table.deleteOne({ email: 'bob@example.com' });\n  table.deleteMany({ inactive: true });\n  table.findOneAndDelete({ email: 'old@example.com' });\n\nBONUS:\n  INDEXING:\n    table.createIndex({ email: 1 }, { unique: true });\n  DROPPING:\n    table.users.drop();\n  CHANGE LOGGING:\n    table.watch();\n    changeStream.on('change', (change) => console.log(change));\n\nOPERATORS:\n  | Operator | Meaning               | Example                                      |\n  | --------- | --------------------- | -------------------------------------------- |\n  | $eq      | Equal to              | { airline: { $eq: 'Delta' } }                |\n  | $ne      | Not equal to          | { airline: { $ne: 'Delta' } }                |\n  | $gt      | Greater than          | { passengerCount: { $gt: 100 } }             |\n  | $gte     | Greater than or equal | { passengerCount: { $gte: 100 } }            |\n  | $lt      | Less than             | { passengerCount: { $lt: 100 } }             |\n  | $lte     | Less than or equal    | { passengerCount: { $lte: 100 } }            |\n  | $in      | Value in array        | { airline: { $in: ['Delta', 'United'] } }    |\n  | $nin     | Value not in array    | { airline: { $nin: ['Delta', 'United'] } }   |",
+   createMongo: `
+    // CREATE (POST /user)
+    router.post("/", async (req, res) => {
+        try {
+        const { name, email } = req.body;
+        if (!name || !email) {
+            return res.status(400).json({ message: "name and email are required" });
+        }
+
+        const existing = await users.findOne({ email });
+        if (existing) {
+            return res.status(409).json({ message: "Email already exists" });
+        }
+
+        const result = await users.insertOne({
+            name,
+            email,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        });
+
+        return res.status(201).json({ _id: result.insertedId, name, email });
+        } catch (e) {
+        console.error("POST /user error:", e);
+        res.status(500).json({ message: "Internal server error" });
+        }
+    });
+   `,
+
+   getAllMongo:`
+    // READ ALL (GET /user)
+    router.get("/", async (req, res) => {
+        try {
+        const usersList = await users.find().sort({ createdAt: -1 }).toArray();
+        res.json(usersList);
+        } catch (e) {
+        console.error("GET /user error:", e);
+        res.status(500).json({ message: "Internal server error" });
+        }
+    });
+   `,
+
+   getOneMongo:`
+    // READ ONE (GET /user/:id)
+    router.get("/:id", async (req, res) => {
+        try {
+        const { id } = req.params;
+        if (!ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid user ID" });
+        }
+
+        const user = await users.findOne({ _id: new ObjectId(id) });
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.json(user);
+        } catch (e) {
+        console.error("GET /user/:id error:", e);
+        res.status(500).json({ message: "Internal server error" });
+        }
+    });
+   `,
+
+   updateOneMongo:`
+    // UPDATE (PATCH /user/:id)
+    router.patch("/:id", async (req, res) => {
+        try {
+        const { id } = req.params;
+        const { name, email } = req.body;
+
+        if (!ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid user ID" });
+        }
+
+        const updateFields = {};
+        if (name) updateFields.name = name;
+        if (email) updateFields.email = email;
+        updateFields.updatedAt = new Date();
+
+        const result = await users.findOneAndUpdate(
+            { _id: new ObjectId(id) },
+            { $set: updateFields },
+            { returnDocument: "after" }
+        );
+
+        if (!result.value) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.json(result.value);
+        } catch (e) {
+        console.error("PATCH /user/:id error:", e);
+        res.status(500).json({ message: "Internal server error" });
+        }
+    });
+   `,
+
+   deleteOneMongo:`
+    // DELETE (DELETE /user/:id)
+    router.delete("/:id", async (req, res) => {
+        try {
+        const { id } = req.params;
+        if (!ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid user ID" });
+        }
+
+        const result = await users.deleteOne({ _id: new ObjectId(id) });
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(204).send();
+        } catch (e) {
+        console.error("DELETE /user/:id error:", e);
+        res.status(500).json({ message: "Internal server error" });
+        }
+    });
+   `,
+
+   getCollection:`
+    const users = db.collection("users");
+   `,
     };
 
     // export default codeSnippets;
