@@ -441,6 +441,53 @@ window.codeSnippets = {
    getCollection:`
     const users = db.collection("users");
    `,
+
+   // Handlebars
+   forLoopHB:`
+    {{#each items}}
+    {{this}}
+    {{/each}}
+
+    {{@key}} = property name  
+    {{this}} = property value
+   `,
+
+   conditionHB:`
+    {{#if condition}}
+    do this
+    {{else}}
+    otherwise this
+    {{/if}}   
+   `,
+
+   rawHTMLHB:`
+    {{variable}} → Escaped (safe HTML)
+
+    {{{variable}}} → Raw HTML   
+   `,
+
+   partialHB:`
+    {{> header}}   
+    {{> userCard user}}
+
+    <div class="card">
+        <h2>{{name}}</h2>
+        <p>{{email}}</p>
+    </div>
+
+    {
+        user: { name: "Alice", email: "alice@example.com" }
+    }
+
+    // Sample of card:
+    <div class="card">
+        <h2>Alice</h2>
+        <p>alice@example.com</p>
+    </div>
+   `,
+
+
     };
+    
 
     // export default codeSnippets;
