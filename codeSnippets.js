@@ -265,6 +265,68 @@ window.codeSnippets = {
     toggleMethod: `
     $("#div").toggle();
     `,
+    ajaxFormSubmit: `
+    $('#submitBtn').on('click', function () {
+        const email = $('#email').val().trim();
+        if (!email) {
+            $('#message').html('<div class="alert alert-danger">Email is required.</div>');
+        } else {
+            // Replace with AJAX call
+            $.ajax({
+            url: '/register',
+            type: 'POST',
+            data: $('#regForm').serialize(),
+            success: function (response) {
+                $('#message').html('<div class="alert alert-success">' + response + '</div>');
+            }
+            });
+        }
+    });    
+    `,
+    ajaxFullExample:`
+    // When the GET button is clicked
+    $('#getBtn').on('click', function() {
+      $.ajax({
+        url: "https://jsonplaceholder.typicode.com/posts",
+        type: "GET",
+        data: { userId: 1 }, // query parameters
+        success: function(response, status, xhr) {
+          // Show the first 2 results
+          $('#output').html("GET Success:<br>" + JSON.stringify(response.slice(0, 2), null, 2));
+          console.log("GET success:", response);
+        },
+        error: function(xhr, status, error) {
+          // Show error message
+          $('#output').html("GET Error: " + xhr.status + " " + error);
+          console.error("GET error:", error);
+        }
+      });
+    });
+
+    // When the POST button is clicked
+    $('#postBtn').on('click', function() {
+      $.ajax({
+        url: "https://jsonplaceholder.typicode.com/posts",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          title: "Simple AJAX Post",
+          body: "This was sent using jQuery AJAX.",
+          userId: 10
+        }), // body parameters
+        success: function(response, status, xhr) {
+          // Show server response
+          $('#output').html("POST Success:<br>" + JSON.stringify(response, null, 2));
+          console.log("POST success:", response);
+        },
+        error: function(xhr, status, error) {
+          // Show error message
+          $('#output').html("POST Error: " + xhr.status + " " + error);
+          console.error("POST error:", error);
+        }
+      });
+    });
+    `,
 
     // Mongoose MongoDB
     mongoDbClient: `
