@@ -548,6 +548,44 @@ window.codeSnippets = {
     </div>
    `,
 
+   fullExpressHandlebar:`
+    const express = require('express');
+    const exphbs = require('express-handlebars');
+    const path = require('path');
+    const { connectToMongo, getDb } = require('./database');
+
+    const app = express();
+    const PORT = 3000;
+
+    connectToMongo(err => {
+        if (err) console.error('MongoDB connection failed:', err);
+        else console.log('Connected to MongoDB');
+    });
+
+    const db = getDb('ccapdevho2');
+
+    app.engine('hbs', exphbs.engine({
+        extname: 'hbs',
+        defaultLayout: 'main', // tell express-handlebars to use main.hbs
+        layoutsDir: path.join(__dirname, 'views', 'layouts'),
+        partialsDir: path.join(__dirname, 'views', 'partials')
+    }));
+
+    app.set('view engine', 'hbs');
+    app.set('views', path.join(__dirname, 'views'));
+
+    app.use(express.json());
+    app.use(express.urlencoded({ extended: true }));
+
+    app.get('/', (req, res) => {
+        res.status(200).render('practice', { title: 'Welcome page!' });
+    });
+
+    app.listen(PORT, () => {
+        console.log('Server is running on port: ', PORT);
+    });
+
+   `,
 
     };
     
