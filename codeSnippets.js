@@ -545,7 +545,11 @@ window.codeSnippets = {
     const request = require("supertest");
     const app = require("../app");
 
+    // beforeEach(() => jest.clearAllMocks());
+
     describe("Auth Controller Tests", () => {
+    
+    //
 
     it("GET /auth/login should respond with 200", async () => {
         const res = await request(app).get("/auth/login");
@@ -645,6 +649,12 @@ window.codeSnippets = {
     });
 
    `,
+
+   hbsRegisterHelper:`
+    hbs.registerHelper("increment", function (value) {
+        return parseInt(value) + 1;
+    });
+   `
 
     };
     
