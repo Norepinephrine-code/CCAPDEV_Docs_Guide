@@ -531,6 +531,7 @@ window.codeSnippets = {
     const users = db.collection("users");
    `,
 
+   // Others
    setupCookies:`
     // Session
     app.use(session({
@@ -565,6 +566,59 @@ window.codeSnippets = {
     });
 
     });
+   `,
+
+   auth:`
+    const User = require("../models/User");
+
+    // GET /auth/login
+    exports.showLoginForm = (req, res) => {
+    if (req.session.user) return res.redirect("/");
+    res.render("pages/user/loginPage");
+    };
+
+    // POST /auth/login
+    exports.loginUser = async (req, res) => {
+    const { email = "", password = "" } = req.body;
+
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
+    if (!user) return res.status(400).render("pages/user/loginPage");
+
+    const ok = await user.comparePassword(password);
+    if (!ok) return res.status(400).render("pages/user/loginPage");
+
+    req.session.user = { id: user._id.toString() };
+    res.redirect("/");
+    };
+
+    // GET /auth/register
+    exports.showRegisterForm = (req, res) => {
+    if (req.session.user) return res.redirect("/");
+    res.render("pages/user/registerPage");
+    };
+
+    // POST /auth/register
+    exports.registerUser = async (req, res) => {
+    const { firstName = "", lastName = "", email = "", password = "" } = req.body;
+
+    const exists = await User.findOne({ email: email.toLowerCase().trim() });
+    if (exists) return res.status(400).render("pages/user/registerPage");
+
+    const user = await User.create({
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        email: email.toLowerCase().trim(),
+        password                     // <<< plain password, pre-save hashes it
+    });
+
+    req.session.user = { id: user._id.toString() };
+    res.redirect("/");
+    };
+
+    // GET /auth/logout
+    exports.logoutUser = (req, res) => {
+    req.session.destroy(() => res.redirect("/auth/login"));
+    };
    `,
 
    // Handlebars
