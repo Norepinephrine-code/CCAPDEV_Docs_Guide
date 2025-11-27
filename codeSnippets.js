@@ -531,6 +531,16 @@ window.codeSnippets = {
     const users = db.collection("users");
    `,
 
+   setupCookies:`
+    // Session
+    app.use(session({
+        secret: 'dev-ccapdev-secret-change-me',
+        resave: false,
+        saveUninitialized: false,
+        cookie: { httpOnly: true }
+    }));
+   `,
+
    // Handlebars
    forLoopHB:`
     {{#each items}}
