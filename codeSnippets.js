@@ -363,20 +363,44 @@ window.codeSnippets = {
     `,
 
     modelMongoose: `
-    import mongoose from "mongoose";
+    const mongoose = require('mongoose');
+    const bcrypt = require('bcryptjs');
 
-    // 1. Define the schema (mongoose.Schema)
-    const flightSchema = new mongoose.Schema({
-        airline: { type: String, required: true },
-        flightNumber: { type: String, required: true, unique: true },
-        passengerCount: { type: Number, required: true, min: 0 },
-        createdAt: { type: Date, default: Date.now }
+    const UserSchema = new mongoose.Schema({
+    firstName: String,
+    lastName: String,
+    email: { type: String, unique: true },
+    password: String,
+    phone: String,
+    passportNumber: String,
+    role: { type: String, default: 'user' }
     });
 
-    // 2. Create the model (table in SQL) (mongoose.model)
-    const Flight = mongoose.model("Flight", flightSchema);
+    /****************************************************/
+    /* Pre-save: Hash password if modified              */
+    /****************************************************/
+    UserSchema.pre('save', async function (next) {
+    // Only hash if password is new or modified
+    if (!this.isModified('password')) return next();
 
-    export default Flight;
+    try {
+        const salt = await bcrypt.genSalt(10);
+        const hashed = await bcrypt.hash(this.password, salt);
+        this.password = hashed;
+        next();
+    } catch (err) {
+        next(err);
+    }
+    });
+
+    /****************************************************/
+    /* Method to compare passwords                      */
+    /****************************************************/
+    UserSchema.methods.comparePassword = function (candidatePassword) {
+    return bcrypt.compare(candidatePassword, this.password);
+    };
+
+    module.exports = mongoose.model('User', UserSchema);
     `,
 
    reference: "MONGODB CRUD REFERENCE\n\nCREATE:\n  table.insertOne({ object });\n\nREAD:\n  table.findOne({ filter });\n  table.countDocuments({ filter });\n  table.aggregate([\n    { $match: { } },\n    { $group: { } }\n  ]).toArray();\n\nUPDATE:\n  table.updateOne(\n    { WHERE },\n    { $set: { ... } }\n  );\n  table.updateMany(\n    { active: false },\n    { $set: { status: 'inactive' } }\n  );\n  table.replaceOne(\n    { _id: new ObjectId('...') },\n    { name: 'Bob', email: 'bob@example.com', role: 'user' }\n  );\n  table.findOneAndUpdate(\n    { email: 'bob@example.com' },\n    { $set: { lastLogin: new Date() } },\n    { returnDocument: 'after' }\n  );\n\nDELETE:\n  table.deleteOne({ email: 'bob@example.com' });\n  table.deleteMany({ inactive: true });\n  table.findOneAndDelete({ email: 'old@example.com' });\n\nBONUS:\n  INDEXING:\n    table.createIndex({ email: 1 }, { unique: true });\n  DROPPING:\n    table.users.drop();\n  CHANGE LOGGING:\n    table.watch();\n    changeStream.on('change', (change) => console.log(change));\n\nOPERATORS:\n  | Operator | Meaning               | Example                                      |\n  | --------- | --------------------- | -------------------------------------------- |\n  | $eq      | Equal to              | { airline: { $eq: 'Delta' } }                |\n  | $ne      | Not equal to          | { airline: { $ne: 'Delta' } }                |\n  | $gt      | Greater than          | { passengerCount: { $gt: 100 } }             |\n  | $gte     | Greater than or equal | { passengerCount: { $gte: 100 } }            |\n  | $lt      | Less than             | { passengerCount: { $lt: 100 } }             |\n  | $lte     | Less than or equal    | { passengerCount: { $lte: 100 } }            |\n  | $in      | Value in array        | { airline: { $in: ['Delta', 'United'] } }    |\n  | $nin     | Value not in array    | { airline: { $nin: ['Delta', 'United'] } }   |",
