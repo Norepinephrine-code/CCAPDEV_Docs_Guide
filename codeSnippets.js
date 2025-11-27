@@ -569,6 +569,22 @@ window.codeSnippets = {
    `,
 
    auth:`
+
+    /*
+     [GET] Login Form
+     [POST] Auth Process
+        - findOne({})
+        - comparePassword()
+        - save to session
+        - redirect
+     [GET] Register Form
+     [POST] Register Process
+        - findOne({})
+        - create
+        - save to session
+        - redirect
+    */
+
     const User = require("../models/User");
 
     // GET /auth/login
