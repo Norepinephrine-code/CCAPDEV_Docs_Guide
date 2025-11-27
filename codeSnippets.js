@@ -541,6 +541,28 @@ window.codeSnippets = {
     }));
    `,
 
+   jestTest:`
+    const request = require("supertest");
+    const app = require("../app");
+
+    describe("Auth Controller Tests", () => {
+
+    it("GET /auth/login should respond with 200", async () => {
+        const res = await request(app).get("/auth/login");
+        expect(res.status).toBe(200);
+    });
+
+    it("POST /auth/login should 400 on bad credentials", async () => {
+        const res = await request(app)
+        .post("/auth/login")
+        .send({ email: "nope@test.com", password: "wrong" });
+
+        expect(res.status).toBe(400);
+    });
+
+    });
+   `,
+
    // Handlebars
    forLoopHB:`
     {{#each items}}
